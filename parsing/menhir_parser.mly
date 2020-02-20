@@ -127,6 +127,8 @@ line:
                      scope_term md [] (mk_lam te ps))}
   | KW_DEF id=ID ps=param+ DEF te=term DOT
     {fun md -> Def(fst id, snd id, Public, false, None, scope_term md [] (mk_lam te ps))}
+  | KW_DEF id=ID ps=param+ COLON ty=term DOT
+    {fun md -> Decl(fst id, snd id, Public, Definable Term.Free, scope_term md [] (mk_pi ty ps))}
   | KW_PRV KW_DEF id=ID COLON ty=term DEF te=term DOT
       {fun md -> Def(fst id, snd id, Private, false, Some(scope_term md [] ty), scope_term md [] te)}
   | KW_PRV KW_DEF id=ID DEF te=term DOT
@@ -136,6 +138,8 @@ line:
                      scope_term md [] (mk_lam te ps))}
   | KW_PRV KW_DEF id=ID ps=param+ DEF te=term DOT
       {fun md -> Def(fst id, snd id, Private, false, None, scope_term md [] (mk_lam te ps))}
+  | KW_PRV KW_DEF id=ID ps=param+ COLON ty=term DOT
+    {fun md -> Decl(fst id, snd id, Private, Definable Term.Free, scope_term md [] (mk_pi ty ps))}
   | KW_THM id=ID COLON ty=term DEF te=term DOT
       {fun md -> Def(fst id, snd id, Public, true, Some(scope_term md [] ty), scope_term md [] te)}
   | KW_THM id=ID ps=param+ COLON ty=term DEF te=term DOT
