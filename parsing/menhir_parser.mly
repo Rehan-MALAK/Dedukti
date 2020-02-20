@@ -146,6 +146,8 @@ line:
 
   | EVAL te=term DOT
       {fun md -> Eval($1, default_cfg, scope_term md [] te)}
+  | EVAL LEFTBRA ps=param* RIGHTBRA te=term DOT
+      {fun md -> Eval($1, default_cfg, scope_term md [] (mk_lam te ps))}
   | EVAL cfg=eval_config te=term DOT
       {fun md -> Eval($1, cfg, scope_term md [] te)}
   | INFER te=term DOT
@@ -168,6 +170,8 @@ line:
       {fun md -> Check($1, false, true , Convert(scope_term md [] t1, scope_term md [] t2))}
   | ASSERT t1=aterm EQUAL t2=term DOT
       {fun md -> Check($1, true , false, Convert(scope_term md [] t1, scope_term md [] t2))}
+  | ASSERT LEFTBRA ps=param* RIGHTBRA t1=aterm EQUAL t2=term DOT
+      {fun md -> Check($1, true , false , Convert(scope_term md [] (mk_lam t1 ps), scope_term md [] (mk_lam t2 ps)))}
   | ASSERTNOT t1=aterm EQUAL t2=term DOT
       {fun md -> Check($1, true , true , Convert(scope_term md [] t1, scope_term md [] t2))}
 
